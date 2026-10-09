@@ -9,6 +9,10 @@ app.use(express.urlencoded({ extended: false }))
 
 //ROUTES
 
+app.get("/", (req, res) => {
+    res.send('server works')
+})
+
 app.get("/users", (req, res) => {
     const html = `
     <ul>
