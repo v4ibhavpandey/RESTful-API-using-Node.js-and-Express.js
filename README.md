@@ -1,8 +1,8 @@
 # RESTful CRUD API — Node.js & Express.js
 
-A personal learning project implementing a RESTful API using **Node.js** and **Express.js** that performs full CRUD operations on user records stored in a local JSON file (`MOCK_DATA.json`).
+A personal learning project implementing a RESTful API using **Node.js** and **Express.js** that lists, adds, and deletes user records loaded from a local JSON file (`MOCK_DATA.json`). The update (PATCH) route is not implemented yet.
 
-> **Note:** This is a learning/practice project. Data is persisted in a flat JSON file — no database is used. It is not deployed to a production server.
+> **Note:** This is a beginner learning project. There is no database and no input validation, and it is not deployed anywhere. Run it locally to try it.
 
 ---
 
@@ -10,12 +10,12 @@ A personal learning project implementing a RESTful API using **Node.js** and **E
 
 - **GET** `/api/users` — Fetch all user records
 - **GET** `/api/users/:id` — Fetch a single user by ID
-- **POST** `/api/users` — Create a new user (persisted to JSON file)
+- **POST** `/api/users` — Create a new user (also written back to `MOCK_DATA.json`; responds with `{ status: "pending" }`)
 - **PATCH** `/api/users/:id` — Update a user (stub — returns `{ status: "pending" }`)
-- **DELETE** `/api/users/:id` — Delete a user (removes from in-memory array)
+- **DELETE** `/api/users/:id` — Delete a user (removed from the in-memory array only; the JSON file is **not** updated, so the user comes back after a restart)
 - **GET** `/users` — HTML list view of first names
 
-All endpoints return JSON responses with appropriate HTTP status codes (200, 201, 404).
+Responses are JSON. Only DELETE returns a 404 (when the id does not exist); everything else returns 200, and `GET /api/users/:id` returns `null` for an unknown id.
 
 ---
 
@@ -26,7 +26,7 @@ All endpoints return JSON responses with appropriate HTTP status codes (200, 201
 | Runtime | Node.js |
 | Framework | Express.js |
 | Data storage | `MOCK_DATA.json` (local flat file) |
-| Body parsing | `express.urlencoded` |
+| Body parsing | `express.urlencoded` (form-encoded bodies only, not JSON) |
 
 ---
 
@@ -36,6 +36,7 @@ All endpoints return JSON responses with appropriate HTTP status codes (200, 201
 ├── index.js          # Main Express server & all route handlers
 ├── MOCK_DATA.json    # Seed data (user records)
 ├── package.json
+└── README.md
 ```
 
 ---
@@ -44,7 +45,7 @@ All endpoints return JSON responses with appropriate HTTP status codes (200, 201
 
 ```bash
 npm install
-node index.js
+npm start
 # Server starts at http://localhost:8000
 ```
 
@@ -53,15 +54,16 @@ node index.js
 ## What I learned
 
 - REST API design conventions (resource naming, HTTP verbs, status codes)
-- Express.js routing with `.route()` chaining for clean handler separation
+- Express.js routing, including `.route()` chaining
 - Reading/writing to a JSON file as a simple persistence mechanism
-- Postman-based endpoint testing and validation
-- Structuring a Node.js project with separation of concerns (even at small scale)
+- Testing endpoints by hand in Postman
 
 ---
 
 ## Limitations & next steps
 
+- [ ] Fix DELETE so it saves to the file (the `fs.writeFile` call after `return` never runs)
+- [ ] Accept JSON bodies with `express.json()` and return 201 and 404 where they belong
 - [ ] Replace JSON file storage with a real database (MySQL / MongoDB)
 - [ ] Complete the PATCH endpoint (currently returns stub)
 - [ ] Add input validation and error handling middleware
@@ -70,4 +72,4 @@ node index.js
 
 ---
 
-*Built as a hands-on exercise to understand RESTful backend architecture.*
+*Built as a hands-on exercise to understand how REST routes work in Express.*
